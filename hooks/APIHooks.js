@@ -1,13 +1,20 @@
-// hooks.js
+
 import {useState, useEffect} from 'react';
 
-const useFetch= (url) => {
+const apiUrl = 'http://media.mw.metropolia.fi/wbma/';
+const getAllMedia= () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const fetchUrl= async () =>{
-    const response = await fetch(url);
+    const response = await fetch(apiUrl + 'media');
     const json = await response.json();
-    setData(json);
+    console.log(json);
+    const result= await Promise.all(json.map(async (item)=>{
+      const response= await fetch(apiUrl + 'media/' + item.file_id);
+      return await response.json();
+    }));
+    console.log(result);
+    setData(result);
     setLoading(false);
   };
   useEffect(() => {
@@ -15,4 +22,4 @@ const useFetch= (url) => {
   }, []);
   return [data, loading];
 };
-export {useFetch};
+export {getAllMedia};
