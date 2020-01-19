@@ -1,17 +1,44 @@
 /* eslint-disable max-len */
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Image,
+  Modal,
+  Alert,
+  TouchableHighlight
 } from 'react-native';
 import PropTypes from 'prop-types';
 
 const ListItem = (props) => {
+  const [modalVisible, setModalVisible] = useState(false);
   return (
-    <TouchableOpacity >
+    <TouchableOpacity
+      onPress={() => {
+        setModalVisible(true);
+      }}>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible= {modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}>
+        <View style={{marginTop: 40, marginLeft: 25}}>
+          <View>
+            <Text>Filename: {props.singleMedia.filename}</Text>
+
+            <TouchableHighlight
+              onPress={() => {
+                setModalVisible(!modalVisible);
+              }}>
+              <Text style ={{color: 'red'}}>Hide Modal</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.innerContainer}>
         <Image
           style={styles.img}
