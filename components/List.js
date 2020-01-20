@@ -19,8 +19,8 @@ const List = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 35,
-    backgroundColor: 'grey',
+    marginTop: 0,
+    backgroundColor: 'white',
   },
 });
 

@@ -1,7 +1,10 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable max-len */
 import React from 'react';
-import {View} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import List from './components/List';
+import Constants from 'expo-constants';
+
 const mediaArray = [
   {
     'key': '0',
@@ -35,8 +38,26 @@ const mediaArray = [
 const App = () => {
   return (
     <View>
+      <View style={styles.statusBar} />
+      <View>
+      <Image source={require('./cat.jpg')} style={styles.sliderImg}/>
+      </View>
       <List mediaArray={mediaArray} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  statusBar: {
+    backgroundColor: '#DB9174',
+    height: Constants.statusBarHeight,
+  },
+  sliderImg: {
+    width: 450, 
+    height: 200,
+    marginBottom: 6,
+    borderColor: 'black',
+    
+  },
+});
 export default App;

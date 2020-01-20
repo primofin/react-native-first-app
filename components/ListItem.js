@@ -1,3 +1,5 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable no-tabs */
 /* eslint-disable max-len */
 import React, {useState} from 'react';
 import {
@@ -8,7 +10,8 @@ import {
   Image,
   Modal,
   Alert,
-  TouchableHighlight
+  TouchableHighlight,
+  Platform,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -45,8 +48,8 @@ const ListItem = (props) => {
           source={{uri: props.singleMedia.thumbnails.w160}}
         />
         <View style={styles.textContainer}>
-          <Text style={{fontWeight: 'bold', fontSize: 20}}>{props.singleMedia.title}</Text>
-          <Text >{props.singleMedia.description}</Text>
+          <Text style={styles.title}>{props.singleMedia.title}</Text>
+          <Text>{props.singleMedia.description}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -58,25 +61,46 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
     flexDirection: 'row',
-    borderTopWidth: 2,
-    borderBottomWidth: 2,
-    borderColor: 'white',
+    marginLeft: 3,
+    marginRight: 3,
+    marginBottom: 6,
+    borderWidth: 2,
+    borderColor: 'black',
+    backgroundColor: '#DB9174',
+    shadowColor: '#75746e',
+    shadowOffset: {
+	    width: 0,
+	    height: 6,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 7.49,
+    elevation: 12,
   },
   img: {
     width: 100,
-    height: undefined,
-    marginTop: 22,
+    height: 200,
+    marginTop: 55,
     marginLeft: 11,
     marginBottom: 20,
     flex: 1,
-    borderRadius: 2,
+    borderRadius: 300,
   },
   textContainer: {
     paddingTop: 34,
     marginLeft: 5,
     paddingBottom: 30,
     flex: 1,
+    fontFamily: 'serif',
+    color: 'purple',
   },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    fontFamily: Platform.OS === 'ios' ? 'Baskerville' : 'monospace',
+    color: '#361134',
+    paddingBottom: 5,
+  },
+
 });
 
 ListItem.propTypes = {
