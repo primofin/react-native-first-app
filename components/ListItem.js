@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable no-tabs */
 /* eslint-disable max-len */
@@ -21,7 +22,8 @@ const ListItem = (props) => {
     <TouchableOpacity
       onPress={() => {
         setModalVisible(true);
-      }}>
+      }}
+    >
       <Modal
         animationType="slide"
         transparent={false}
@@ -31,8 +33,11 @@ const ListItem = (props) => {
         }}>
         <View style={{marginTop: 40, marginLeft: 25}}>
           <View>
-            <Text>Filename: {props.singleMedia.filename}</Text>
-
+            <Text style={{fontWeight: 'bold'}}>'Filename' image: </Text>
+            <Image
+              style={{width: '90%', height: 200, resizeMode: 'stretch', marginTop: 3}}
+              source={{uri: props.singleMedia.filename}}
+            />
             <TouchableHighlight
               onPress={() => {
                 setModalVisible(!modalVisible);
@@ -43,10 +48,12 @@ const ListItem = (props) => {
         </View>
       </Modal>
       <View style={styles.innerContainer}>
-        <Image
-          style={styles.img}
-          source={{uri: props.singleMedia.thumbnails.w160}}
-        />
+        <TouchableOpacity>
+          <Image
+            style={styles.img}
+            source={{uri: props.singleMedia.thumbnails.w160}}
+          />
+        </TouchableOpacity>
         <View style={styles.textContainer}>
           <Text style={styles.title}>{props.singleMedia.title}</Text>
           <Text>{props.singleMedia.description}</Text>
@@ -77,13 +84,13 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   img: {
-    width: 100,
-    height: 200,
+    width: 160,
+    height: 100,
     marginTop: 55,
     marginLeft: 11,
     marginBottom: 20,
     flex: 1,
-    borderRadius: 300,
+    borderRadius: 200,
   },
   textContainer: {
     paddingTop: 34,

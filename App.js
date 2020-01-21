@@ -1,5 +1,6 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable max-len */
+/* global require */
 import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import List from './components/List';
@@ -35,12 +36,13 @@ const mediaArray = [
   },
 ];
 
+
 const App = () => {
   return (
     <View>
       <View style={styles.statusBar} />
       <View>
-      <Image source={require('./cat.jpg')} style={styles.sliderImg}/>
+        <Image source={require('./cat.jpg')} style={styles.sliderImg}/>
       </View>
       <List mediaArray={mediaArray} />
     </View>
