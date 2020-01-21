@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable no-tabs */
 /* eslint-disable max-len */
@@ -19,9 +20,12 @@ const ListItem = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <TouchableOpacity
-      onPress={() => {
-        setModalVisible(true);
-      }}>
+      onPress={
+        () => {
+          props.navigation.push('Single');
+        }
+      }
+    >
       <Modal
         animationType="slide"
         transparent={false}
@@ -31,8 +35,11 @@ const ListItem = (props) => {
         }}>
         <View style={{marginTop: 40, marginLeft: 25}}>
           <View>
-            <Text>Filename: {props.singleMedia.filename}</Text>
-
+            <Text style={{fontWeight: 'bold'}}>'Filename' image: </Text>
+            <Image
+              style={{width: '90%', height: 400, resizeMode: 'stretch', marginTop: 3}}
+              source={{uri: props.singleMedia.filename}}
+            />
             <TouchableHighlight
               onPress={() => {
                 setModalVisible(!modalVisible);
@@ -43,13 +50,18 @@ const ListItem = (props) => {
         </View>
       </Modal>
       <View style={styles.innerContainer}>
-        <Image
-          style={styles.img}
-          source={{uri: props.singleMedia.thumbnails.w160}}
-        />
+        <TouchableOpacity
+          onPress={() => {
+            setModalVisible(!modalVisible);
+          }}>
+          <Image
+            style={styles.img}
+            source={{uri: props.singleMedia.thumbnails.w160}}
+          />
+        </TouchableOpacity>
         <View style={styles.textContainer}>
           <Text style={styles.title}>{props.singleMedia.title}</Text>
-          <Text>{props.singleMedia.description}</Text>
+          <Text style={{fontSize: 16}}>{props.singleMedia.description}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -77,13 +89,14 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   img: {
-    width: 100,
-    height: 200,
-    marginTop: 55,
+    width: 150,
+    height: 120,
+    marginTop: 75,
     marginLeft: 11,
-    marginBottom: 20,
+    marginRight: 3,
+    marginBottom: 60,
     flex: 1,
-    borderRadius: 300,
+    borderRadius: 100,
   },
   textContainer: {
     paddingTop: 34,
