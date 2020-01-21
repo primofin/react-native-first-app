@@ -2,31 +2,31 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable no-tabs */
 /* eslint-disable max-len */
-import React, {useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Image,
-  Modal,
-  Alert,
-  TouchableHighlight,
   Platform,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
 const ListItem = (props) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  // const [modalVisible, setModalVisible] = useState(false);
   return (
     <TouchableOpacity
       onPress={
         () => {
-          props.navigation.push('Single');
+          props.navigation.push('Single', {
+            title: props.singleMedia.title,
+            filename: props.singleMedia.filename,
+          });
         }
       }
     >
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={false}
         visible= {modalVisible}
@@ -48,12 +48,13 @@ const ListItem = (props) => {
             </TouchableHighlight>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
       <View style={styles.innerContainer}>
         <TouchableOpacity
-          onPress={() => {
-            setModalVisible(!modalVisible);
-          }}>
+          // onPress={() => {
+          //   setModalVisible(!modalVisible);
+          // }}
+        >
           <Image
             style={styles.img}
             source={{uri: props.singleMedia.thumbnails.w160}}

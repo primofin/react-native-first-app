@@ -1,10 +1,17 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Image} from 'react-native';
 
-const Single = () => {
+const Single = (props) => {
   return (
     <View style={styles.container}>
-      <Text>Single</Text>
+      <Text>
+        Title:
+        {JSON.stringify(props.navigation.getParam('title'))}
+      </Text>
+      <Image
+        style={{width: '90%', height: 400, marginTop: 15}}
+        source={{uri: props.navigation.getParam('filename')}}
+      />
     </View>
   );
 };
