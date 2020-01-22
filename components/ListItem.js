@@ -13,51 +13,26 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
+const apiUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
 const ListItem = (props) => {
-  // const [modalVisible, setModalVisible] = useState(false);
+  const item = props.singleMedia;
+  console.log(item.thumbnails.w160);
   return (
     <TouchableOpacity
       onPress={
         () => {
           props.navigation.push('Single', {
             title: props.singleMedia.title,
-            filename: props.singleMedia.filename,
+            filename: apiUrl + props.singleMedia.filename,
           });
         }
       }
     >
-      {/* <Modal
-        animationType="slide"
-        transparent={false}
-        visible= {modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
-        <View style={{marginTop: 40, marginLeft: 25}}>
-          <View>
-            <Text style={{fontWeight: 'bold'}}>'Filename' image: </Text>
-            <Image
-              style={{width: '90%', height: 400, resizeMode: 'stretch', marginTop: 3}}
-              source={{uri: props.singleMedia.filename}}
-            />
-            <TouchableHighlight
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}>
-              <Text style ={{color: 'red'}}>Hide Modal</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
-      </Modal> */}
       <View style={styles.innerContainer}>
-        <TouchableOpacity
-          // onPress={() => {
-          //   setModalVisible(!modalVisible);
-          // }}
-        >
+        <TouchableOpacity>
           <Image
             style={styles.img}
-            source={{uri: props.singleMedia.thumbnails.w160}}
+            source={{uri: apiUrl + item.thumbnails.w160}}
           />
         </TouchableOpacity>
         <View style={styles.textContainer}>
