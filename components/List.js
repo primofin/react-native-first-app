@@ -5,13 +5,12 @@ import {
 import ListItem from './ListItem';
 import PropTypes from 'prop-types';
 import {MediaContext} from '../contexts/MediaContext';
-import {useFetch} from '../hooks/APIHooks';
+import {getAllMedia} from '../hooks/APIHooks';
 
 
 const List = (props) => {
   const [media, setMedia] = useContext(MediaContext);
-  const url = 'https://raw.githubusercontent.com/mattpe/wbma/master/docs/assets/test.json';
-  const [data, loading] = useFetch(url);
+  const [data, loading] = getAllMedia();
   console.log(data, loading);
   setMedia(data);
   return (
