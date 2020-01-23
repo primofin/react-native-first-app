@@ -16,7 +16,6 @@ import PropTypes from 'prop-types';
 const apiUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
 const ListItem = (props) => {
   const item = props.singleMedia;
-  console.log(item.thumbnails.w160);
   return (
     <TouchableOpacity
       onPress={

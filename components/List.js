@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
 
 List.propTypes = {
   mediaArray: PropTypes.array,
+  navigation: PropTypes.object,
 };
 
 export default List;
