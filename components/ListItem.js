@@ -17,18 +17,17 @@ const apiUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
 const ListItem = (props) => {
   const item = props.singleMedia;
   return (
-    <TouchableOpacity
-      onPress={
-        () => {
-          props.navigation.push('Single', {
-            title: props.singleMedia.title,
-            filename: apiUrl + props.singleMedia.filename,
-          });
-        }
-      }
-    >
+    <TouchableOpacity>
       <View style={styles.innerContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={
+            () => {
+              props.navigation.push('Single', {
+                title: props.singleMedia.title,
+                filename: apiUrl + props.singleMedia.filename,
+              });
+            }
+          }>
           <Image
             style={styles.img}
             source={{uri: apiUrl + item.thumbnails.w160}}
