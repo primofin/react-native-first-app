@@ -1,11 +1,9 @@
 import React, {useContext} from 'react';
-import {
-  FlatList, View, StyleSheet,
-} from 'react-native';
-import ListItem from './ListItem';
 import PropTypes from 'prop-types';
 import {MediaContext} from '../contexts/MediaContext';
 import {getAllMedia} from '../hooks/APIHooks';
+import {List as BaseList} from 'native-base';
+import ListItem from './ListItem';
 
 
 const List = (props) => {
@@ -13,27 +11,18 @@ const List = (props) => {
   const [data] = getAllMedia();
   setMedia(data);
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={media}
-        keyExtractor={(item, index)=> index.toString()}
-        renderItem={
-          ({item}) => <ListItem
-            navigation={props.navigation}
-            singleMedia={item}
-          />}
-      />
-    </View>
+    <BaseList
+      dataArray={media}
+      renderRow={
+        (item) => <ListItem
+          navigation={props.navigation}
+          singleMedia={item}
+        />
+      }
+      keyExtractor={(item, index) => index.toString()}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 0,
-    backgroundColor: 'white',
-  },
-});
-
 List.propTypes = {
   mediaArray: PropTypes.array,
   navigation: PropTypes.object,

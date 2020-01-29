@@ -1,124 +1,137 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
+  Container,
+  Header,
+  Body,
+  Title,
+  Content,
+  Form,
   Button,
+  Text,
+  Item,
+  H2,
+} from 'native-base';
+import {
   AsyncStorage,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import {login, register} from '../hooks/APIHooks';
+import {fetchGET, fetchPOST} from '../hooks/APIHooks';
 import FormTextInput from '../components/FormTextInput';
 import useSignUpForm from '../hooks/LoginHooks';
 
-
-const Login = (props) => { // props is needed for
-  const {inputs,
+const Login = (props) => {
+  const [error, setError] = useState('');
+  const {
     handleUsernameChange,
     handlePasswordChange,
     handleEmailChange,
-    handleFullNameChange,
+    handleFullnameChange,
+    inputs,
   } = useSignUpForm();
   const signInAsync = async () => {
     try {
-      const user = await login(inputs);
+      const user = await fetchPOST('login', inputs);
       console.log('Login', user);
       await AsyncStorage.setItem('userToken', user.token);
       await AsyncStorage.setItem('user', JSON.stringify(user.user));
       props.navigation.navigate('App');
     } catch (e) {
-      console.log('error:', e.message);
+      console.log('signInAsync error: ' + e.message);
+      setError(e.message);
     }
   };
   const registerAsync = async () => {
     try {
-      await register(inputs);
-      signInAsync(inputs);
+      const result = await fetchPOST('users', inputs);
+      console.log('register', result);
+      signInAsync();
     } catch (e) {
-      console.log('error:', e.message);
+      console.log('registerAsync error: ', e.message);
+      setError(e.message);
     }
   };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.login_container}>
+    <Container>
+      <Header>
+        <Body><Title>MyApp</Title></Body>
+      </Header>
+      <Content>
         {/* login form */}
-        <Text>Login</Text>
-        <View style={styles.form}>
-          <FormTextInput
-            autoCapitalize='none'
-            placeholder='username'
-            name = 'username'
-            value={inputs.username}
-            onChangeText={handleUsernameChange}
-          />
-          <FormTextInput
-            autoCapitalize='none'
-            placeholder='password'
-            secureTextEntry={true}
-            name = 'password'
-            value={inputs.password}
-            onChangeText={handlePasswordChange}
-          />
-          <Button title="Sign in!" onPress={signInAsync} />
-        </View>
-      </View>
-      <View style={styles.register_container}>
-        <Text>Register</Text>
-        <View style={styles.form}>
-          <FormTextInput
-            autoCapitalize='none'
-            placeholder='username'
-            name = 'username'
-            value={inputs.username}
-            onChangeText={handleUsernameChange}
-          />
-          <FormTextInput
-            autoCapitalize='none'
-            placeholder='email'
-            name = 'email'
-            value={inputs.email}
-            onChangeText={handleEmailChange}
-          />
-          <FormTextInput
-            autoCapitalize='none'
-            placeholder='fullname'
-            name = 'fullname'
-            value={inputs.full_name}
-            onChangeText={handleFullNameChange}
-          />
-          <FormTextInput
-            autoCapitalize='none'
-            placeholder='password'
-            secureTextEntry={true}
-            name = 'password'
-            value={inputs.password}
-            onChangeText={handlePasswordChange}
-          />
-          <Button title="Register !" onPress={registerAsync} />
-        </View>
-      </View>
-    </View>
+        <Form>
+          <Title>
+            <H2>Login</H2>
+          </Title>
+          <Item>
+            <FormTextInput
+              autoCapitalize='none'
+              value={inputs.username}
+              placeholder='username'
+              onChangeText={handleUsernameChange}
+            />
+          </Item>
+          <Item>
+            <FormTextInput
+              autoCapitalize='none'
+              value={inputs.password}
+              placeholder='password'
+              secureTextEntry={true}
+              onChangeText={handlePasswordChange}
+            />
+          </Item>
+          <Button full onPress={signInAsync}><Text>Sign in!</Text></Button>
+        </Form>
+
+        {/* register form */}
+        <Form>
+          <Title>
+            <H2>Register</H2>
+          </Title>
+          <Item>
+            <FormTextInput
+              autoCapitalize='none'
+              value={inputs.username}
+              placeholder='username'
+              onChangeText={handleUsernameChange}
+            />
+          </Item>
+          <Item>
+            <FormTextInput
+              autoCapitalize='none'
+              value={inputs.email}
+              placeholder='email'
+              onChangeText={handleEmailChange}
+            />
+          </Item>
+          <Item>
+            <FormTextInput
+              autoCapitalize='none'
+              value={inputs.fullname}
+              placeholder='fullname'
+              onChangeText={handleFullnameChange}
+            />
+          </Item>
+          <Item>
+            <FormTextInput
+              autoCapitalize='none'
+              value={inputs.password}
+              placeholder='password'
+              secureTextEntry={true}
+              onChangeText={handlePasswordChange}
+            />
+          </Item>
+          <Button full onPress={registerAsync}>
+            <Text>Register!</Text>
+          </Button>
+        </Form>
+        <Text>{error}</Text>
+      </Content>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 60,
-  },
-  register_container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
 // proptypes here
-Login.prototype = {
+Login.propTypes = {
   navigation: PropTypes.object,
 };
 
