@@ -24,14 +24,15 @@ import useSignUpForm from '../hooks/LoginHooks';
 
 const Login = (props) => {
   const [register, setRegister]= useState('false');
-  const [password, setPassword]=useState();
   const [error, setError] = useState('');
   const {
     handleUsernameChange,
     handlePasswordChange,
     handleEmailChange,
     handleFullnameChange,
+    handleConfirmPasswordChange,
     inputs,
+    validatingForm,
   } = useSignUpForm();
 
 
@@ -43,6 +44,7 @@ const Login = (props) => {
       await AsyncStorage.setItem('user', JSON.stringify(user.user));
       props.navigation.navigate('App');
     } catch (e) {
+      alert('Please type the right username and password!');
       console.log('signInAsync error: ' + e.message);
       setError(e.message);
     }
@@ -50,9 +52,15 @@ const Login = (props) => {
 
   const registerAsync = async () => {
     try {
-      const result = await fetchPOST('users', inputs);
-      console.log('register', result);
-      signInAsync();
+      const [isValidated, bugs] = validatingForm(inputs);
+      if (isValidated) {
+        const result = await fetchPOST('users', inputs);
+        console.log('register', result);
+        signInAsync();
+      } else {
+        const string= bugs.toString();
+        alert(string==='confirmPassword'? 'Confirmed password does NOT match Password':`Make sure ${string} in correct format` );
+      }
     } catch (e) {
       console.log('registerAsync error: ', e.message);
       setError(e.message);
@@ -63,9 +71,7 @@ const Login = (props) => {
     setRegister(!register);
   };
 
-  const confirmPassword = (password) => {
-    return setPassword(password);
-  };
+  const successVariable = true;
 
   return (
 
@@ -83,9 +89,12 @@ const Login = (props) => {
               </Title>
               <Item>
                 <FormTextInput
+                  success={successVariable}
+                  error={!successVariable}
                   autoCapitalize='none'
                   value={inputs.username}
                   placeholder='username'
+                  label='username'
                   onChangeText={handleUsernameChange}
                 />
               </Item>
@@ -94,6 +103,7 @@ const Login = (props) => {
                   autoCapitalize='none'
                   value={inputs.password}
                   placeholder='password'
+                  label='password'
                   secureTextEntry={true}
                   onChangeText={handlePasswordChange}
                 />
@@ -119,6 +129,7 @@ const Login = (props) => {
                 autoCapitalize='none'
                 value={inputs.username}
                 placeholder='username'
+                label='username'
                 onChangeText={handleUsernameChange}
                 onEndEditing={async (evt) => {
                   const text = evt.nativeEvent.text;
@@ -136,14 +147,16 @@ const Login = (props) => {
                 autoCapitalize='none'
                 value={inputs.email}
                 placeholder='email'
+                label='email'
                 onChangeText={handleEmailChange}
               />
             </Item>
             <Item>
               <FormTextInput
                 autoCapitalize='none'
-                value={inputs.fullname}
+                value={inputs.full_name}
                 placeholder='fullname'
+                label='fullname'
                 onChangeText={handleFullnameChange}
               />
             </Item>
@@ -152,27 +165,19 @@ const Login = (props) => {
                 autoCapitalize='none'
                 value={inputs.password}
                 placeholder='password'
+                label='password'
                 secureTextEntry={true}
                 onChangeText={handlePasswordChange}
-                onEndEditing= { async (evt) => {
-                  const text = evt.nativeEvent.text;
-                  return confirmPassword(text);
-                }}
               />
             </Item>
             <Item>
               <FormTextInput
                 autoCapitalize='none'
-                value={inputs.password}
+                value={inputs.confirmPassword}
                 placeholder='confirm password'
+                label='confirm password'
                 secureTextEntry={true}
-                onChangeText={handlePasswordChange}
-                onEndEditing={ async (evt) => {
-                  const text = evt.nativeEvent.text;
-                  if (text !== password) {
-                    Alert.alert('Those passwords did not match. Try again');
-                  }
-                }}
+                onChangeText={handleConfirmPasswordChange}
               />
             </Item>
             <Button full onPress={registerAsync}>
@@ -182,11 +187,11 @@ const Login = (props) => {
               <Text>{register ? 'No account yet ?' : 'Have account already ?'}</Text>
             </Button>
           </Form>
+          <Text>{error}</Text>
         </View>
         }
       </Content>
     </Container>
-
 
   );
 };

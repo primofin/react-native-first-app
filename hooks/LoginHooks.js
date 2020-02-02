@@ -1,4 +1,7 @@
 import {useState} from 'react';
+import validate from 'validate.js';
+import {constraints} from '../validation/Constraints';
+
 
 const useSignUpForm = () => {
   const [inputs, setInputs] = useState({});
@@ -30,12 +33,35 @@ const useSignUpForm = () => {
         password: text,
       }));
   };
+  const handleConfirmPasswordChange = (text) => {
+    setInputs((inputs) =>
+      ({
+        ...inputs,
+        confirmPassword: text,
+      }));
+  };
+
+  const validatingForm = (input) => {
+    const check = validate(input, constraints);
+    if (!check) {
+      const bugs= [];
+      const isValidated=true;
+      return [isValidated, bugs];
+    } else {
+      const bugs = Object.keys(check);
+      const isValidated=false;
+      return [isValidated, bugs];
+    }
+  };
+
   return {
     inputs,
     handleUsernameChange,
     handlePasswordChange,
     handleEmailChange,
     handleFullNameChange,
+    handleConfirmPasswordChange,
+    validatingForm,
   };
 };
 
