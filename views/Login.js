@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 /* eslint-disable max-len */
 import React, {useState} from 'react';
 import {
@@ -21,8 +22,49 @@ import PropTypes from 'prop-types';
 import {fetchPOST, checkUsername} from '../hooks/APIHooks';
 import FormTextInput from '../components/FormTextInput';
 import useSignUpForm from '../hooks/LoginHooks';
+import validate from 'validate.js';
 
 const Login = (props) => {
+  const constraints = {
+    username: {
+      presence: {
+        allowEmpty: false,
+      },
+      length: {
+        minimum: 3,
+        message: '^Your username must be at least 3 characters',
+      },
+    },
+    password: {
+      presence: {
+        allowEmpty: false,
+      },
+      length: {
+        minimum: 5,
+        message: '^Your password must be at least 5 characters',
+      },
+    },
+    email: {
+      presence: {
+        allowEmpty: false,
+      },
+      email: {
+        message: '^Please enter a valid email address',
+      },
+    },
+    full_name: {
+      length: {
+        minimum: 5,
+        message: '^Your fullname must be at least 5 characters',
+      },
+    },
+    confirmPassword: {
+      presence: {
+        allowEmpty: false,
+      },
+      equality: 'password',
+    },
+  };
   const [register, setRegister]= useState('false');
   const [error, setError] = useState('');
   const {
@@ -32,7 +74,6 @@ const Login = (props) => {
     handleFullnameChange,
     handleConfirmPasswordChange,
     inputs,
-    validatingForm,
   } = useSignUpForm();
 
 
@@ -52,21 +93,25 @@ const Login = (props) => {
 
   const registerAsync = async () => {
     try {
-      const [isValidated, bugs] = validatingForm(inputs);
-      if (isValidated) {
-        const result = await fetchPOST('users', inputs);
-        console.log('register', result);
-        signInAsync();
-      } else {
-        const string= bugs.toString();
-        alert(string==='confirmPassword'? 'Confirmed password does NOT match Password':`Make sure ${string} in correct format` );
-      }
+      validateInput(inputs);
+
+      const result = await fetchPOST('users', inputs);
+      console.log('register', result);
+      signInAsync();
     } catch (e) {
       console.log('registerAsync error: ', e.message);
       setError(e.message);
     }
   };
+  const validateInput = (inputs) => {
+    const bugs = Object.keys(validate(inputs, constraints))[0];
+    console.log(bugs);
 
+    const message = validate(inputs, constraints);
+    for (const property in message) {
+      Alert.alert(`${message[property]}`);
+    }
+  };
   const handleToggleClick = ()=> {
     setRegister(!register);
   };
@@ -178,6 +223,12 @@ const Login = (props) => {
                 label='confirm password'
                 secureTextEntry={true}
                 onChangeText={handleConfirmPasswordChange}
+                onEndEditing={async (evt) => {
+                  const text = evt.nativeEvent.text;
+                  if (text==='') {
+                    Alert.alert('The confirm password can not be blank !');
+                  }
+                }}
               />
             </Item>
             <Button full onPress={registerAsync}>
@@ -187,7 +238,6 @@ const Login = (props) => {
               <Text>{register ? 'No account yet ?' : 'Have account already ?'}</Text>
             </Button>
           </Form>
-          <Text>{error}</Text>
         </View>
         }
       </Content>
