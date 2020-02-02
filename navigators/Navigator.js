@@ -45,8 +45,8 @@ TabNavigator.navigationOptions = ({navigation}) => {
 
   // You can do whatever you like here to pick the title based on the route name
   const headerTitle = routeName;
-
   return {
+
     headerTitle,
   };
 };

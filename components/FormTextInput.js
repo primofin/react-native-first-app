@@ -3,7 +3,7 @@ import {TextInput} from 'react-native';
 
 const FormTextInput = (props) => {
   return (
-    <TextInput
+    <TextInput style={{fontSize: 20}}
       {...props}
     />
   );
