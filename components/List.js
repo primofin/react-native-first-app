@@ -24,7 +24,6 @@ const List = (props) => {
   );
 };
 List.propTypes = {
-  mediaArray: PropTypes.array,
   navigation: PropTypes.object,
 };
 

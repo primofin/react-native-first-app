@@ -16,20 +16,6 @@ const fetchGET = async (endpoint = '', params = '', token = '') => {
   return await response.json();
 };
 
-const checkUsername= async (username) => {
-  try {
-    const response = await fetch(apiUrl + `users/username/${username}`);
-    const json = await response.json();
-    console.log(json);
-    if (json.available) {
-      return true;
-    }
-    return false;
-  } catch (e) {
-    console.log('error', e.message);
-  }
-};
-
 const fetchPOST = async (endpoint = '', data = {}, token = '') => {
   const fetchOptions = {
     method: 'POST',
@@ -73,4 +59,4 @@ const getAllMedia = () => {
   return [data, loading];
 };
 
-export {getAllMedia, fetchGET, fetchPOST, checkUsername};
+export {getAllMedia, fetchGET, fetchPOST};

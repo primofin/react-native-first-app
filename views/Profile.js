@@ -22,19 +22,24 @@ const mediaURL = 'http://media.mw.metropolia.fi/wbma/uploads/';
 const Profile = (props) => {
   const [user, setUser] = useState({
     userdata: {},
-    avatar: '',
+    avatar: 'https://',
   });
   const userToState = async () => {
     try {
       const userFromStorage = await AsyncStorage.getItem('user');
-      // eslint-disable-next-line max-len
       const uData = JSON.parse(userFromStorage);
       const avatarPic = await fetchGET('tags', 'avatar_' + uData.user_id);
-      console.log('aPic', avatarPic[0].filename);
+      console.log('avpic', avatarPic);
+      let avPic = '';
+      if (avatarPic.length === 0) { // if avatar is not set
+        avPic = 'https://placekitten.com/1024/1024';
+      } else {
+        avPic = mediaURL + avatarPic[0].filename;
+      }
       setUser((user) => (
         {
           userdata: uData,
-          avatar: avatarPic[0].filename,
+          avatar: avPic,
         }));
     } catch (e) {
       console.log('Profile error: ', e.message);
@@ -67,7 +72,7 @@ const Profile = (props) => {
                   height: deviceHeight / 2,
                 }}
                 spinnerColor='#777'
-                source={{uri: mediaURL + user.avatar}}
+                source={{uri: user.avatar}}
               />
             </Body>
           </CardItem>
