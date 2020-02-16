@@ -81,12 +81,10 @@ const useModifyForm = () => {
     const fd = new FormData();
     fd.append('title', inputs.title);
     fd.append('description', inputs.description);
-
     console.log('FD:', fd);
 
     try {
       const token = await AsyncStorage.getItem('userToken');
-
       const fetchOptions = {
         method: 'PUT',
         headers: {
@@ -101,7 +99,7 @@ const useModifyForm = () => {
           fetchOptions,
       );
       const json = await result.json();
-      console.log('upload result:', json);
+      console.log('modify result:', json);
       if (json.file_id) {
         // modify successful
         const json = await fetchGET('media/all');

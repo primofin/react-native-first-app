@@ -90,4 +90,4 @@ const fetchDELETE = async (endpoint = '', params = '', token = '') => {
 //   }
 // };
 
-export {getAllMedia, fetchGET, fetchPOST, getUser, getUserMedia, fetchDELETE, fetchPUT};
+export {getAllMedia, fetchGET, fetchPOST, getUser, getUserMedia, fetchDELETE};

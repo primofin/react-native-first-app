@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   Content,
   Form,
@@ -17,12 +17,11 @@ import AsyncImage from '../components/AsyncImage';
 import PropTypes from 'prop-types';
 import FormTextInput from '../components/FormTextInput';
 import useModifyForm from '../hooks/ModifyHooks';
-import {fetchPUT} from '../hooks/APIHooks';
 
 const deviceHeight = Dimensions.get('window').height;
 const mediaURL = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
-const Upload = (props) => {
+const Modify = (props) => {
   const {navigation} = props;
   const file = navigation.state.params.file;
   const {
@@ -111,8 +110,8 @@ const Upload = (props) => {
 };
 
 // proptypes here
-Upload.propTypes = {
+Modify.propTypes = {
   navigation: PropTypes.object,
 };
 
-export default Upload;
+export default Modify;
