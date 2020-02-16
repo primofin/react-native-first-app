@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {AsyncStorage} from 'react-native';
 
 const apiUrl = 'http://media.mw.metropolia.fi/wbma/';
 
@@ -38,25 +38,56 @@ const fetchPOST = async (endpoint = '', data = {}, token = '') => {
 };
 
 
-const getAllMedia = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const fetchMedia = async () => {
-    try {
-      const json = await fetchGET('media/all');
-      const result = await Promise.all(json.files.map(async (item) => {
+const getAllMedia = async () => {
+  const json = await fetchGET('media/all', '');
+  const result = await Promise.all(
+      json.files.map(async (item) => {
         return await fetchGET('media', item.file_id);
-      }));
-      setData(result);
-      setLoading(false);
-    } catch (e) {
-      console.log('getAllMedia error', e.message);
-    }
-  };
-  useEffect(() => {
-    fetchMedia();
-  }, []);
-  return [data, loading];
+      }),
+  );
+  return result;
 };
 
-export {getAllMedia, fetchGET, fetchPOST};
+
+const getUser = async (id) => {
+  try {
+    const token = await AsyncStorage.getItem('userToken');
+    return await fetchGET('users', id, token);
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+const getUserMedia = async (token) => {
+  const json = await fetchGET('media/user', '', token);
+  const result = await Promise.all(json.map(async (item) => {
+    return await fetchGET('media', item.file_id);
+  }));
+  return result;
+};
+
+const fetchDELETE = async (endpoint = '', params = '', token = '') => {
+  const fetchOptions = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-access-token': token,
+    },
+  };
+  const response = await fetch(apiUrl + endpoint + '/' + params,
+      fetchOptions);
+  if (!response.ok) {
+    throw new Error('fetchGET error: ' + response.status);
+  }
+  return await response.json();
+};
+
+// const getFavouriteMedia = async (id) => {
+//   try {
+//     return await fetchGET('/favourites/file/', id);
+//   } catch (e) {
+//     console.log('getAllMedia error', e.message);
+//   }
+// };
+
+export {getAllMedia, fetchGET, fetchPOST, getUser, getUserMedia, fetchDELETE, fetchPUT};

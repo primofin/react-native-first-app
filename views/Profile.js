@@ -81,6 +81,9 @@ const Profile = (props) => {
               <Text>Fullname: {user.userdata.full_name}</Text>
               <Text numberOfLines={1}>email: {user.userdata.email}</Text>
             </Body>
+            <Button full onPress={()=> props.navigation.navigate('MyFiles')}>
+              <Text>My own files </Text>
+            </Button>
           </CardItem>
           <CardItem footer bordered>
             <Body>

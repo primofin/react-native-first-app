@@ -1,17 +1,16 @@
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable max-len */
 
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import List from '../components/List';
 import PropTypes from 'prop-types';
 
-const Home = (props) => {
+const MyFiles = (props) => {
   const {navigation} = props;
   return (
     <View style={styles.container}>
-      <List navigation={navigation} mode={'all'}></List>
+      <List navigation={navigation} mode={'myfiles'}></List>
     </View>
+
   );
 };
 
@@ -23,9 +22,9 @@ const styles = StyleSheet.create({
   },
 });
 
-Home.propTypes = {
+MyFiles.propTypes = {
   navigation: PropTypes.object,
 };
 
 
-export default Home;
+export default MyFiles;

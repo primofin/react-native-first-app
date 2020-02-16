@@ -6,79 +6,77 @@ import {
   Button,
   Text,
   Item,
+  CardItem,
+  Video,
 } from 'native-base';
 import {
   Dimensions,
   Image,
 } from 'react-native';
+import AsyncImage from '../components/AsyncImage';
 import PropTypes from 'prop-types';
 import FormTextInput from '../components/FormTextInput';
-import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
-import useUploadForm from '../hooks/UploadHooks';
+import useModifyForm from '../hooks/ModifyHooks';
+import {fetchPUT} from '../hooks/APIHooks';
 
 const deviceHeight = Dimensions.get('window').height;
+const mediaURL = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
 const Upload = (props) => {
-  const [image, setImage] = useState(null);
-
+  const {navigation} = props;
+  const file = navigation.state.params.file;
   const {
     handleTitleChange,
     handleDescriptionChange,
-    handleUpload,
+    handleModify,
     inputs,
     validateField,
     validateOnSend,
     errors,
     resetInputs,
-  } = useUploadForm();
+  } = useModifyForm();
 
   const validationProperties = {
     title: {title: inputs.title},
     description: {description: inputs.description},
   };
 
-  const getPermissionAsync = async () => {
-    if (Constants.platform.ios) {
-      const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
-      }
-    }
-  };
-
-  useEffect(() => {
-    getPermissionAsync();
-  }, []);
-
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.3,
-      exif: true,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result);
-    }
-  };
   const resetForm = () => {
     resetInputs();
-    setImage(null);
   };
 
 
   return (
     <Content>
       <Form>
+        <CardItem>
+          {file.media_type === 'image' &&
+            <AsyncImage
+              style={{
+                width: '100%',
+                height: deviceHeight / 2,
+              }}
+              spinnerColor='#777'
+              source={{uri: mediaURL + file.filename}}
+            />
+          }
+          {file.media_type === 'video' &&
+              <Video
+                source={{uri: mediaURL + file.filename}}
+                rate={1.0}
+                volume={1.0}
+                isMuted={false}
+                resizeMode="contain"
+                shouldPlay
+                isLooping
+                useNativeControls
+                style={{width: '100%', height: deviceHeight / 2}}
+              />
+          }
+        </CardItem>
         <Item>
           <FormTextInput
-            placeholder='Title'
+            placeholder={'Title: '+file.title}
             onChangeText={handleTitleChange}
             value={inputs.title}
             onEndEditing={() => {
@@ -89,7 +87,7 @@ const Upload = (props) => {
         </Item>
         <Item>
           <FormTextInput
-            placeholder='Description'
+            placeholder={'Description: ' + file.description}
             onChangeText={handleDescriptionChange}
             value={inputs.description}
             onEndEditing={() => {
@@ -98,20 +96,14 @@ const Upload = (props) => {
             error={errors.description}
           />
         </Item>
-        {image &&
-        <Image source={{uri: image.uri}}
-          style={{width: '100%', height: deviceHeight / 3}}/>
-        }
-        <Button full onPress={pickImage}>
-          <Text>Select file</Text>
-        </Button>
+
         <Button dark full onPress={resetForm}>
           <Text>Reset form</Text>
         </Button>
         <Button full danger onPress={() => {
-          validateOnSend(validationProperties) && handleUpload(image, props.navigation);
+          validateOnSend(validationProperties) && handleModify(file.file_id, props.navigation);
         }}>
-          <Text>Upload</Text>
+          <Text>Update</Text>
         </Button>
       </Form>
     </Content>
